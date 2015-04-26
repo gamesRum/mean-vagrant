@@ -10,19 +10,26 @@ language: python
 python:
     - "2.7"
 
+git:
+    submodules: false
+
+before_install:
+    - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+    - git submodule update --init --recursive
+
 install:
-      - pip install -r requirements.txt --use-mirrors
-      - sudo apt-get update -q
-      - sudo apt-get install -q virtualbox --fix-missing
-      - sudo wget -nv http://files.vagrantup.com/packages/7e400d00a3c5a0fdf2809c8b5001a035415a607b/vagrant_1.2.2_x86_64.deb
-      - sudo dpkg -i vagrant_1.2.2_x86_64.deb
-      - sudo vagrant plugin install vagrant-plugin-bundler
+    - pip install -r requirements.txt --use-mirrors
+    - sudo apt-get update -q
+    - sudo apt-get install -q virtualbox --fix-missing
+    - sudo wget -nv http://files.vagrantup.com/packages/7e400d00a3c5a0fdf2809c8b5001a035415a607b/vagrant_1.2.2_x86_64.deb
+    - sudo dpkg -i vagrant_1.2.2_x86_64.deb
+    - sudo vagrant plugin install vagrant-plugin-bundler
 
 script:
-      - sudo vagrant up
-      - nose2 --verbose
-      - sudo vagrant package python-baseline
+    - sudo vagrant up
+    - nose2 --verbose
+    - sudo vagrant package python-baseline
 
 after-script:
-      - sudo vagrant halt
-      - sudo vagrant destroy
+    - sudo vagrant halt
+    - sudo vagrant destroy
